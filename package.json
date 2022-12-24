@@ -1,0 +1,19 @@
+{
+  "name": "travelpaddi",
+  "version": "1.0.0",
+  "description": "a web app that connects travellers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eloagbawe/travelPaddi.git"
+  },
+  "author": "Elo Agbawe Idiodi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Eloagbawe/travelPaddi/issues"
+  },
+  "homepage": "https://github.com/Eloagbawe/travelPaddi#readme"
+}
