@@ -2,8 +2,10 @@
   "name": "travelpaddi",
   "version": "1.0.0",
   "description": "a web app that connects travellers",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,18 @@
   "bugs": {
     "url": "https://github.com/Eloagbawe/travelPaddi/issues"
   },
-  "homepage": "https://github.com/Eloagbawe/travelPaddi#readme"
+  "homepage": "https://github.com/Eloagbawe/travelPaddi#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
