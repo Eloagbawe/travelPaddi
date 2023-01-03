@@ -1,16 +1,16 @@
 import { FaSignInAlt } from "react-icons/fa"
-import { useState } from "react"
+// import { useState } from "react"
 
 export const Login = () => {
   return (
-    <div className="text-[#002455] mt-10">
-        <div className="flex justify-center">
-        <FaSignInAlt className="mt-3 mr-2 text-lg"/>
-        <h3 className="text-4xl">Login</h3>
+    <div className="text-[#002455] lg:mt-2">
+        <div className="flex justify-center text-center">
+        <FaSignInAlt className="mt-2 sm:mt-3 mr-2 text-lg"/>
+        <h3 className="text-2xl sm:text-4xl">Login</h3>
         </div>
 
         <div className="flex justify-center">
-            <form className="sm:w-4/12 w-11/12">
+            <form className="sm:w-5/12 w-11/12">
                 <div className="border border-[#999999] mt-10 w-full rounded">
                 <input className="outline-none p-3 w-full rounded" type="email" id="email" name="email"
                 placeholder='Enter your email'/>
