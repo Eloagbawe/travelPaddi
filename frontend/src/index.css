@@ -46,6 +46,7 @@ body {
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   height: 100vh;
 }
 code {
@@ -59,4 +60,13 @@ code {
   bottom: 0;
   width: 100%;
   text-align: center;
+}
+
+.modal {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 24px;
+  background-color: #ffffff;
 }
