@@ -2,7 +2,13 @@ import React, {useEffect} from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import {Routes, Route} from 'react-router-dom'
+// import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+
 import { useLocation } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+
+
 
 import {Home } from './pages/Home'
 import { Login } from './pages/Login';
@@ -36,11 +42,12 @@ function App() {
         <Route path='/signup' element={<Signup/>} />
         <Route path='/search' element={<Search/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
-
       </Routes>
     <Footer/>
     </div>
     {/* </Router> */}
+    <ToastContainer/>
+
     </>
   );
 }

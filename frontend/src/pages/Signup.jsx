@@ -1,6 +1,62 @@
 import { FaUser } from "react-icons/fa"
+import { useState, useEffect } from "react"
+import { toast } from "react-toastify"
+import { Spinner} from '../components/Spinner'
+import { useSelector, useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { register, reset } from "../features/auth/authSlice"
+
 
 export const Signup = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    phone: ''
+  })
+
+  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+  const {username, email, password, confirmPassword, phone} = formData
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message)
+    }
+
+    if (isSuccess || user ) {
+      navigate('/dashboard')
+    }
+
+    dispatch(reset())
+
+  },[user, isError, isSuccess, message, navigate, dispatch])
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }))
+  }
+  const onSubmit = (e) => {
+    e.preventDefault()
+    if (username === '' || email === '' || password === ''
+        || confirmPassword === '' || phone === '') {
+          toast.error('Please fill in all details')
+        }
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match!')
+    } else {
+      const userData = {username, email, password, phone}
+      dispatch(register(userData))
+    }
+  }
+
+  if (isLoading) {
+    return (<Spinner/>)
+  }
   return (
     <div className="text-[#002455] lg:mt-2 mb-10">
         <div className="flex justify-center text-center">
@@ -9,29 +65,29 @@ export const Signup = () => {
         </div>
 
         <div className="flex justify-center">
-            <form className="sm:w-5/12 w-11/12 text-xs sm:text-base">
+            <form className="sm:w-5/12 w-11/12 text-xs sm:text-base" onSubmit={onSubmit}>
                 <div className="border border-[#999999] mt-8 w-full rounded">
-                <input className="outline-none rounded p-3 w-full" type="username" id="username" name="email"
-                placeholder='Enter your username'/>
+                <input className="outline-none rounded p-3 w-full" type="username" id="username" name="username"
+                placeholder='Enter your username' value={username} onChange={onChange}/>
                 </div>
                 <div className="border border-[#999999] mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="email" id="email" name="email"
-                placeholder='Enter your email'/>
+                placeholder='Enter your email' value={email} onChange={onChange}/>
                 </div>
 
                 <div className="border border-[#999999] mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="password" id="password" name="password"
-                placeholder='Enter your password'/>
+                placeholder='Enter your password' value={password} onChange={onChange}/>
                 </div>
 
-                <div className="border border-[#999999] mt-8 w-full rounded">
+                <div className={`${password && password !== confirmPassword ? 'border-[red]' : 'border-[#999999]'} border mt-8 w-full rounded`}>
                 <input className="outline-none rounded p-3 w-full" type="password" id="confirmPassword" name="confirmPassword"
-                placeholder='Confirm password'/>
+                placeholder='Confirm password' value={confirmPassword} onChange={onChange}/>
                 </div>
 
-                <div className="border border-[#999999] mt-8 w-full rounded">
+                <div className="border-[#999999] border  mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="tel" id="phone" name="phone"
-                placeholder='Enter phone number'/>
+                placeholder='Enter phone number' value={phone} onChange={onChange}/>
                 </div>
 
                 <div className="mt-5">
