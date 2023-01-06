@@ -105,6 +105,7 @@ const searchItinerary = asyncHandler(async (req, res) => {
         // $or: [{start_date: {$gte: start_date}}, {end_date: {$lte: end_date}}]
         // $or: [{start_date: {$gte: start_date}}, {end_date: {$lte: end_date}}]
     }).populate('user', { 
+                        id: 1,
                         username: 1, 
                         phone: 1,
                         first_name: 1,

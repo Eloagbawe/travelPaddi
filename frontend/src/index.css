@@ -53,12 +53,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+#root {
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 3rem;
+}
+
 
 .footer {
-  position: fixed;
+  /* position: fixed;
+  left: 0;
+  bottom: 0;*/
+  width: 100%;
+  position: absolute;
   left: 0;
   bottom: 0;
-  width: 100%;
   text-align: center;
 }
 
@@ -66,7 +75,7 @@ code {
   position: absolute;
   top: 30%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -25%);
   box-shadow: 24px;
   background-color: #ffffff;
 }
