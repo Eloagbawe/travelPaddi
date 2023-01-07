@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const User = require('../models/userModel')
+const Connection = require('../models/connectionModel')
 
 
 const createUser = asyncHandler(async (req, res) => {
@@ -98,6 +99,27 @@ const getUser = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('User not found')
     }
+
+    if (req.user.id !== req.params.id){
+        const connectionExists = await Connection.find({
+            $or : [
+                {$and:[{sender: req.user.id}, {recipient:req.params.id}]}, 
+                {$and:[{sender: req.params.id}, {recipient:req.user.id}]}
+            ]
+        })
+    
+        if (connectionExists.length === 0) {
+            res.status(403)
+            throw new Error('Request denied, not connected to user')
+        }
+    
+        if (connectionExists.length > 0 && connectionExists[0].status === 'pending') {
+            res.status(403)
+            throw new Error('Request denied, connection pending')
+        }
+    }
+
+    
 
     res.status(200).json({
         id: user.id,

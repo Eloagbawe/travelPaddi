@@ -95,8 +95,12 @@ const getConnections = asyncHandler(async (req, res) => {
     // const query1 = {path: 'sender', select: '-password -goals -itineraries -connections -__v', match: {_id: {$ne: req.user.id}}}
     // const query2 = {path: 'recipient', select: '-password -goals -itineraries -connections -__v', match: {_id: {$ne: req.user.id}}}
 
-    const senderQuery = {path: 'sender', select: '-password -goals -itineraries -connections -__v'}
-    const recipientQuery = {path: 'recipient', select: '-password -goals -itineraries -connections -__v'}
+    // const senderQuery = {path: 'sender', select: '-password -goals -itineraries -connections -__v'}
+    const senderQuery = {path: 'sender', select: '_id username'}
+
+    // const recipientQuery = {path: 'recipient', select: '-password -goals -itineraries -connections -__v'}
+    const recipientQuery = {path: 'recipient', select: '_id username'}
+
 
     const connections = await Connection.find({$or:[{sender: req.user.id}, {recipient: req.user.id}]}).populate(senderQuery).populate(recipientQuery)
 

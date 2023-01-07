@@ -85,7 +85,9 @@ const updateItinerary = asyncHandler(async (req, res) => {
 })
 
 const searchItinerary = asyncHandler(async (req, res) => {
-    const { start_date, end_date, country, state, city} = req.body
+    // const { start_date, end_date, country, state, city} = req.body
+    const { start_date, end_date, country, state, city} = req.query
+
 
     if (!start_date || !end_date || !country) {
         res.status(400)
@@ -107,15 +109,15 @@ const searchItinerary = asyncHandler(async (req, res) => {
     }).populate('user', { 
                         id: 1,
                         username: 1, 
-                        phone: 1,
-                        first_name: 1,
-                        last_name: 1,
-                        email: 1,
-                        bio: 1,
-                        interests: 1,
-                        gender: 1,
-                        status: 1,
-                        nationality: 1
+                        // phone: 1,
+                        // first_name: 1,
+                        // last_name: 1,
+                        // email: 1,
+                        // bio: 1,
+                        // interests: 1,
+                        // gender: 1,
+                        // status: 1,
+                        // nationality: 1
                     })
     res.status(200).json({search_results})
 
