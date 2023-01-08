@@ -66,8 +66,8 @@ export const Signup = () => {
   }
   return (
     <div className="text-[#002455] lg:mt-2 mb-10">
-        <div className="flex justify-center text-center">
-        <FaUser className="mt-2 sm:mt-3 mr-2 sm:text-lg"/>
+        <div className="flex justify-center items-center text-center">
+        <FaUser className="mr-2 sm:text-lg"/>
         <h3 className="text-2xl sm:text-4xl">Create an Account</h3>
         </div>
 

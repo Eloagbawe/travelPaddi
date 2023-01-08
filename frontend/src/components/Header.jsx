@@ -56,13 +56,13 @@ export const Header = () => {
         }}
       >
         <div className={`${currentPath === '/' ? 'hidden' : ''}`}><MenuItem onClick={handleClose}><Link to="/">Home</Link></MenuItem></div>
-        <MenuItem onClick={handleClose}><Link to="/about">About us</Link></MenuItem>
+        <div className={`${currentPath === '/about' ? 'hidden': ''}`}><MenuItem onClick={handleClose}><Link to="/about">About us</Link></MenuItem></div>
         {user ? (<div><div className={`${currentPath === '/dashboard' ? 'hidden' : ''}`}><MenuItem onClick={handleClose}><Link to="/dashboard">Dashboard</Link></MenuItem></div>
         <MenuItem onClick={handleClose}><button onClick={onLogout}>Logout</button></MenuItem></div>):
         (<div><MenuItem onClick={handleClose}><Link to="/login">Login</Link></MenuItem>
         <MenuItem onClick={handleClose}><Link to="/signup">Signup</Link></MenuItem></div>)}
         
-        <MenuItem onClick={handleClose}><Link to="/contact">Contact us</Link></MenuItem>
+        <div className={`${currentPath === '/contact' ? 'hidden': ''}`}><MenuItem onClick={handleClose}><Link to="/contact">Contact us</Link></MenuItem></div>
 
 
 
@@ -80,7 +80,7 @@ export const Header = () => {
         <Link to="/">Home</Link>
       </div>
 
-      <div className='flex mr-3 mt-2 md:mt-0'>
+      <div className={`${currentPath === '/about' ? 'hidden' : '' } flex mr-3 mt-2 md:mt-0`}>
         <FaBookOpen className='mr-2 mt-1'/>
         <Link to="/about">About us</Link>
       </div>
@@ -105,7 +105,7 @@ export const Header = () => {
       </div>
       </>)}
 
-      <div className='flex mr-3 mt-2 md:mt-0'>
+      <div className={`${currentPath === '/contact' ? 'hidden': ''} flex mr-3 mt-2 md:mt-0`}>
         <FaPhoneSquareAlt className='mr-2 mt-1'/>
         <Link to="/contact">Contact us</Link>
       </div>

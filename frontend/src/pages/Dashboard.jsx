@@ -201,9 +201,9 @@ export const Dashboard = () => {
                         focus:outline-none' onChange={onChange} value={nationality}/>
                         </div>
 
-                        <div className='my-8 flex justify-between'>
-                        <button type="submit" className='border w-4/12 rounded border-[#002455] px-3 py-2'>Save</button>
-                        <button type="reset" onClick={onCancel}className='border rounded w-4/12 border-[#002455] px-3 py-2'>Cancel</button>
+                        <div className='my-8 flex sm:justify-between'>
+                        <button type="submit" className='border mr-5 sm:w-4/12 rounded border-[#002455]  px-2 py-1 sm:px-3 sm:py-2'>Save</button>
+                        <button type="reset" onClick={onCancel}className='border rounded sm:w-4/12 border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Cancel</button>
                         </div>
 
                     </form>
@@ -355,9 +355,9 @@ export const Dashboard = () => {
                         focus:outline-none' onChange={onChange} value={end_date} required/>
                         </div>
 
-                        <div className='my-8 flex justify-between'>
-                        <button type="submit" className='border w-4/12 rounded border-[#002455] px-3 py-2'>Save</button>
-                        <button type="reset" onClick={onCancel} className='border rounded w-4/12 border-[#002455] px-3 py-2'>Cancel</button>
+                        <div className='my-8 flex sm:justify-between'>
+                        <button type="submit" className='border mr-5 sm:w-4/12 rounded border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Save</button>
+                        <button type="reset" onClick={onCancel} className='border rounded sm:w-4/12 border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Cancel</button>
                         </div>
 
                     </form>
@@ -459,9 +459,9 @@ export const Dashboard = () => {
                         focus:outline-none' onChange={onChange} value={end_date} required/>
                         </div>
 
-                        <div className='my-8 flex justify-between'>
-                        <button type="submit" className='border w-4/12 rounded border-[#002455] px-3 py-2'>Save</button>
-                        <button type="reset" onClick={onCancel} className='border rounded w-4/12 border-[#002455] px-3 py-2'>Cancel</button>
+                        <div className='my-8 flex sm:justify-between'>
+                        <button type="submit" className='border mr-5 sm:w-4/12 rounded border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Save</button>
+                        <button type="reset" onClick={onCancel} className='border rounded sm:w-4/12 border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Cancel</button>
                         </div>
 
                     </form>

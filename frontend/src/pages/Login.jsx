@@ -59,8 +59,8 @@ export const Login = () => {
 
   return (
     <div className="text-[#002455] lg:mt-2">
-        <div className="flex justify-center text-center">
-        <FaSignInAlt className="mt-2 sm:mt-3 mr-2 text-lg"/>
+        <div className="flex justify-center items-center text-center">
+        <FaSignInAlt className=" mr-2 text-lg"/>
         <h3 className="text-2xl sm:text-4xl">Login</h3>
         </div>
 
