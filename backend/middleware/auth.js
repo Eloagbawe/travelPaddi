@@ -20,9 +20,18 @@ const protect = asyncHandler(async (req, res, next) => {
             req.user = await User.findById(decoded.id).select('-password').populate({path: 'connections'}).populate('itineraries')
             next()
         } catch (err){
-            console.log(err)
             res.status(401)
-            throw new Error('Not authorized')
+
+            if (err.message === 'invalid signature' || err.message === 'invalid token')
+            {
+                throw new Error('invalid token')
+            }
+            if (err.message === 'jwt expired')
+            {
+                throw new Error('session expired')
+            } else {
+                throw new Error('Not authorized')
+            }
         }
        }
 

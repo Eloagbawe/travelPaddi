@@ -99,7 +99,7 @@ const searchItinerary = asyncHandler(async (req, res) => {
         throw new Error('Invalid dates')
     }
 
-    const search_results = await Itinerary.find(
+    const results = await Itinerary.find(
         {
         country: country,
         start_date: {$lt: end_date},
@@ -119,8 +119,40 @@ const searchItinerary = asyncHandler(async (req, res) => {
                         // status: 1,
                         // nationality: 1
                     })
+
+    const search_results = results.filter((result) => result.user.id !== req.user.id)
     res.status(200).json({search_results})
 
 })
 
-module.exports = {createItinerary, searchItinerary, updateItinerary}
+const deleteItinerary = asyncHandler(async (req, res) => {
+    const itinerary = await Itinerary.findById(req.params.id)
+
+    if (!itinerary) {
+        res.status(404)
+        throw new Error('Itinerary not found')
+    }
+
+    //check for user
+    const user = req.user
+
+    if (!user) {
+        res.status(401)
+        throw new Error('User not found')
+    }
+    //Check if user is owner of itinerary
+    if (itinerary.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
+    }
+
+    const itineraryIdIndex = user.itineraries.indexOf(itinerary.id)
+
+    user.itineraries.splice(itineraryIdIndex, 1)
+    user.save()
+
+    await itinerary.remove()
+    res.status(200).json({id: req.params.id})
+})
+
+module.exports = {createItinerary, searchItinerary, updateItinerary, deleteItinerary}

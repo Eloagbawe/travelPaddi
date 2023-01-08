@@ -55,7 +55,7 @@ const acceptConnection = asyncHandler(async (req, res) => {
         throw new Error('Sender can not accept request')
     }
 
-    if (connection.recipient !== req.user.id) {
+    if (connection.recipient.toString() !== req.user.id) {
         res.status(403)
         throw new Error('Request denied')
     }
@@ -102,7 +102,7 @@ const getConnections = asyncHandler(async (req, res) => {
     const recipientQuery = {path: 'recipient', select: '_id username'}
 
 
-    const connections = await Connection.find({$or:[{sender: req.user.id}, {recipient: req.user.id}]}).populate(senderQuery).populate(recipientQuery)
+    const connections = await Connection.find({$or:[{sender: req.user.id}, {recipient: req.user.id}]}).populate(senderQuery).populate(recipientQuery).sort({'createdAt': -1})
 
     res.status(200).json(connections)
 })
