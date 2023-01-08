@@ -2,3 +2,7 @@
   from = "/api/*"
   to = "https://travelpaddi-api.onrender.com/api/:splat"
   status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
