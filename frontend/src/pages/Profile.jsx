@@ -14,7 +14,7 @@ export const Profile = () => {
     const params = useParams();
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {userProfile, isLoading, isSuccess, isError, message} = useSelector((state) => state.profile)
+    const {userProfile, isLoading, isError, message} = useSelector((state) => state.profile)
     const {user} = useSelector((state) => state.auth)
 
     useEffect(() => {

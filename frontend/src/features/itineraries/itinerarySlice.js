@@ -1,8 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import itineraryService from './itineraryService'
 
-//Get user from localStorage
-const user = JSON.parse(localStorage.getItem('user'))
 
 const initialState = {
     itineraries: [],

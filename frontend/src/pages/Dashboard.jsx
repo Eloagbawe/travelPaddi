@@ -34,8 +34,8 @@ export const Dashboard = () => {
 
     const {profile, isLoading, isSuccess, isError, message} = useSelector((state) => state.profile)
     const {user} = useSelector((state) => state.auth)
-    const {itineraryLoading, itineraryError, itinerarySuccess, itineraryMessage} = useSelector((state) => state.itinerary)
-    const {connections, connectionError, connectionSuccess,
+    const {itineraryLoading, itineraryError, itineraryMessage} = useSelector((state) => state.itinerary)
+    const {connections, connectionError,
         connectionLoading, connectionMessage} = useSelector((state) => state.connection)
 
     useEffect(() => {
