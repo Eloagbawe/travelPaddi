@@ -2,6 +2,8 @@ import React from 'react'
 
 export const ContactUs = () => {
   return (
-    <div>ContactUs</div>
+    <div className='flex justify-center'>
+      <div><h2>Contact Us</h2></div>
+    </div>
   )
 }

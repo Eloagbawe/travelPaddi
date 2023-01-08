@@ -145,9 +145,7 @@ export const Dashboard = () => {
         }
 
         const onCancel = (e) => {
-            // e.preventDefault()
             setEditProfileModal(false)
-            
         }
         return (
             <Modal open={open} handleClose={handleClose} className={'sm:w-6/12 lg:w-4/12'}>
@@ -218,7 +216,6 @@ export const Dashboard = () => {
         const accept = (id) => {
             dispatch(acceptConnection(id)).then(() => {
                 dispatch(getConnections())
-                // dispatch(getMe())
             })
         }
 
@@ -243,19 +240,19 @@ export const Dashboard = () => {
                     {connections?.length > 0 ? 
                     (<div className='mt-5 overflow-scroll'>
                         {connections?.map((connection) => (
-                            <div key={connection._id}>
+                            <div key={connection?._id}>
                                 <div className='flex my-5 sm:justify-between items-center'>
-                                    <p className='mr-5'>{connection.sender._id === user._id ? 
-                                    connection.recipient.username : 
-                                    connection.sender.username}</p>
-                                    {connection.status === 'pending' && <>
-                                    {connection.sender._id === user._id ? <span className="mr-5">Pending</span> :
-                                        <button onClick={() => accept(connection._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-3 shrink-0'>Accept Request</button>
+                                    <p className='mr-5'>{connection?.sender?._id === user._id ? 
+                                    connection?.recipient?.username : 
+                                    connection?.sender?.username}</p>
+                                    {connection?.status === 'pending' && <>
+                                    {connection?.sender?._id === user?._id ? <span className="mr-5">Pending</span> :
+                                        <button onClick={() => accept(connection?._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-3 shrink-0'>Accept Request</button>
                                     }
-                                    <button onClick={() => deleteConnect(connection._id)} className='border border-[#002455] px-3 py-2 rounded text-sm shrink-0'>Delete</button></>}
-                                    {connection.status === 'accepted' && <>
-                                    <button onClick={() => viewProfile(connection.sender._id, connection.recipient._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-5 shrink-0'>View Profile</button>
-                                    <button onClick={() => deleteConnect(connection._id)} className='border border-[#002455] px-3 py-2 rounded shrink-0'>Delete</button></>}
+                                    <button onClick={() => deleteConnect(connection?._id)} className='border border-[#002455] px-3 py-2 rounded text-sm shrink-0'>Delete</button></>}
+                                    {connection?.status === 'accepted' && <>
+                                    <button onClick={() => viewProfile(connection?.sender._id, connection?.recipient._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-5 shrink-0'>View Profile</button>
+                                    <button onClick={() => deleteConnect(connection?._id)} className='border border-[#002455] px-3 py-2 rounded shrink-0'>Delete</button></>}
                                     
                                 </div>
                                 <div className='border-t border-[#002455]'></div>
@@ -490,14 +487,14 @@ export const Dashboard = () => {
         <div className="grid sm:grid-cols-2 gap-10 ">
 
             <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem]'>
-                <h3 className='mt-2 mb-5 text-xl font-bold'>Hello, {profile ? profile.username : ''}!</h3>
-                <p className='mb-5'>Bio: {profile?.bio ? profile.bio : ''}</p>
-                <p className='mb-5'>Name: {profile?.first_name ? profile.first_name : ''} {profile?.last_name ? profile.last_name : ''}</p>
-                <p className='mb-5'>Email: {profile ? profile.email : ''}</p>
-                <p className='mb-5'>Phone: {profile ? profile.phone : ''}</p>
-                <p className='mb-5'>Gender: {profile?.gender ? profile.gender : ''}</p>
-                <p className='mb-5'>Nationality: {profile?.nationality ? profile.nationality : ''}</p>
-                <p className='mb-5'>Interests: {profile?.interests ? profile.interests : ''}</p>
+                <h3 className='mt-2 mb-5 text-xl font-bold'>Hello, {profile ? profile?.username : ''}!</h3>
+                <p className='mb-5'>Bio: {profile?.bio ? profile?.bio : ''}</p>
+                <p className='mb-5'>Name: {profile?.first_name ? profile?.first_name : ''} {profile?.last_name ? profile?.last_name : ''}</p>
+                <p className='mb-5'>Email: {profile ? profile?.email : ''}</p>
+                <p className='mb-5'>Phone: {profile ? profile?.phone : ''}</p>
+                <p className='mb-5'>Gender: {profile?.gender ? profile?.gender : ''}</p>
+                <p className='mb-5'>Nationality: {profile?.nationality ? profile?.nationality : ''}</p>
+                <p className='mb-5'>Interests: {profile?.interests ? profile?.interests : ''}</p>
                 <p className='mb-5'>{profile ? profile?.connections?.length : ''} {profile?.connections?.length === 1 ? 'connection' : 'connections'}</p>
 
                 <button className='border mt-2 text-md sm:px-3 px-2 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>
@@ -517,15 +514,15 @@ export const Dashboard = () => {
                 {profile?.itineraries?.length > 0 ? (
                     <div>
                         {profile?.itineraries.map((itinerary) => (
-                           <div className='my-5' key={itinerary._id}>
-                           <p className='font-bold'>{capitalize(itinerary.country)}{itinerary.state ? ', ' + capitalize(itinerary.state) : ''} {itinerary.city? ', ' + capitalize(itinerary.city) : ''}</p>
-                           <p><Moment format="MMM DD, YYYY">{itinerary.start_date}</Moment>
+                           <div className='my-5' key={itinerary?._id}>
+                           <p className='font-bold'>{capitalize(itinerary?.country)}{itinerary?.state ? ', ' + capitalize(itinerary?.state) : ''} {itinerary?.city? ', ' + capitalize(itinerary?.city) : ''}</p>
+                           <p><Moment format="MMM DD, YYYY">{itinerary?.start_date}</Moment>
                            <span> to </span>  
-                           <Moment format="MMM DD, YYYY">{itinerary.end_date}</Moment></p>
-                           <p className='my-1'>Details: {itinerary.details ? itinerary.details : ''}</p>
-                           <button onClick={() => openEditItinerary(itinerary._id, itinerary.country, itinerary.state, itinerary.city, itinerary.start_date, itinerary.end_date, itinerary.details)} 
+                           <Moment format="MMM DD, YYYY">{itinerary?.end_date}</Moment></p>
+                           <p className='my-1'>Details: {itinerary?.details ? itinerary?.details : ''}</p>
+                           <button onClick={() => openEditItinerary(itinerary?._id, itinerary?.country, itinerary?.state, itinerary?.city, itinerary?.start_date, itinerary?.end_date, itinerary?.details)} 
                            className='border mr-5 text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Edit</button>
-                           <button onClick={() => onDeleteItinerary(itinerary._id)} 
+                           <button onClick={() => onDeleteItinerary(itinerary?._id)} 
                            className='border text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Delete</button>
                        </div> 
                         ))}

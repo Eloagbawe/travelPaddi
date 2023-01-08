@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { toast } from "react-toastify"
 import { Spinner} from '../components/Spinner'
 import { useSelector, useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { register, reset } from "../features/auth/authSlice"
 import { resetProfile } from '../features/profile/profileSlice'
 import { resetConnection } from "../features/connections/connectionSlice"
@@ -99,6 +99,10 @@ export const Signup = () => {
 
                 <div className="mt-5">
                     <button className="border border-[#002455] px-16 py-2 hover:bg-[#002455] hover:text-[#ffffff] rounded">Signup</button>
+                </div>
+
+                <div className="my-8 flex flex-wrap items-center">
+                <p className="mr-3 my-2">Already have an account?</p> <Link to="/login" className="font-bold my-2">Login</Link>
                 </div>
             </form>
         </div>

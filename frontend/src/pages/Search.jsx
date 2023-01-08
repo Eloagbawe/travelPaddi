@@ -26,14 +26,14 @@ export const Search = () => {
 
   const {country, state, city, start_date, end_date} = formData
 
-  const {itineraries, itineraryError, itinerarySuccess,
+  const {itineraries, itineraryError,
          itineraryLoading, itineraryMessage} = useSelector((state) => state.itinerary)
   
   // const {profile, isError, message} = useSelector((state) => state.profile)
 
   const {user} = useSelector((state) => state.auth)
 
-  const {connections, connectionError, connectionSuccess,
+  const {connections, connectionError,
          connectionLoading, connectionMessage} = useSelector((state) => state.connection)
 
   
@@ -97,13 +97,6 @@ export const Search = () => {
     
     dispatch(searchItinerary(itineraryData))
     setSearchMode(true)
-    // setFormData({
-    //   country: '',
-    //   state: '',
-    //   city: '',
-    //   start_date: '',
-    //   end_date: ''
-    // })
     let offsetTop  = document.getElementById("search_results").offsetTop;
       window.scrollTo({
           top: offsetTop-100, 
@@ -120,7 +113,7 @@ export const Search = () => {
   }
 
   const isConnected = (id) => {
-    const connection = connections.filter((data) => 
+    const connection = connections?.filter((data) => 
       (((data.sender._id === id && data.recipient._id === user._id) ||
       (data.sender._id === user._id && data.recipient._id === id)))
     )
