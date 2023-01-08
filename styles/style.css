@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+.logo {
+    width: 15rem;
+}
+
+.nav {
+    width: 100%;
+    
+}
+a, a:link, a:focus, a:hover {
+    text-decoration: none;
+    border: none;
+    outline: none;
+
+}
+.nav-links a, .nav-links a:focus, .nav-links a:hover{
+   font-size: 1.3rem;
+   /* color: #404258; */
+   color: #002455;
+
+
+}
+
+.hero-pic {
+    /* width: 100%; */
+    width: 100%;
+
+    /* border: 1px solid red; */
+}
+
+.hero-text {
+    font-size: 1.5rem;
+    color: #577293;
+}
+.features-heading, .about-heading {
+    color: #002455;
+}
+
+.features-div > div > div{
+    border: 3px solid #e3e3e3;
+    /* height: 20rem; */
+    width: 100%;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.features-div > div > p {
+    color: #002455;
+    margin-bottom: 3rem;
+}
+
+.feature-img {
+    width: 100%;
+    /* height: 100%; */
+    border-radius: 0.3rem;
+    object-fit: contain;
+}
+
+.about-text, .social-links p,  footer{
+    color: #002455;
+}
+
+.social-links a, .social-links a:link, .social-links a:hover, .social-links a:focus{
+    color: #002455;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.github-link, .github-link:focus, .github-link:hover, .github-link:link {
+    color: #577293;
+
+}
+.visit-app-btn {
+    border: 2px solid #002455;
+    background: transparent;
+    border-radius: 0.3rem;
+}
+@media (max-width: 320px) {
+    .nav-links a{
+        font-size: 1rem;
+    }
+    .hero-text {
+        font-size: 1.2rem;
+    }
+} 
+@media (min-width: 575px) {
+    .hero-text {
+        font-size: 2rem;
+    }
+}
