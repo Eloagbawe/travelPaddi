@@ -5,6 +5,9 @@ import { Spinner} from '../components/Spinner'
 import { login, reset } from "../features/auth/authSlice"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { resetProfile } from '../features/profile/profileSlice'
+import { resetConnection } from "../features/connections/connectionSlice"
+import { resetItinerary } from "../features/itineraries/itinerarySlice"
 
 export const Login = () => {
   const dispatch = useDispatch()
@@ -27,6 +30,9 @@ export const Login = () => {
     }
 
     dispatch(reset())
+    dispatch(resetProfile())
+    dispatch(resetConnection())
+    dispatch(resetItinerary())
 
   },[user, isError, isSuccess, message, navigate, dispatch])
 

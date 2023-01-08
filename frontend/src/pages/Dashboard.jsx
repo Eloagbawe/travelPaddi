@@ -1,29 +1,42 @@
 import React, {useState, useEffect} from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { toast } from "react-toastify"
 import Moment from 'react-moment';
+import moment from 'moment';
 import { Modal } from '../components/Modal'
 import { Spinner} from '../components/Spinner'
-import { getMe, getUser, updateProfile, resetProfile } from '../features/profile/profileSlice'
-import { addItinerary, updateItinerary, resetItinerary } from '../features/itineraries/itinerarySlice'
+import { getMe, updateProfile, resetProfile } from '../features/profile/profileSlice'
+import { addItinerary, updateItinerary, resetItinerary, deleteItinerary } from '../features/itineraries/itinerarySlice'
 import { logout } from '../features/auth/authSlice'
+import { acceptConnection, deleteConnection, getConnections, resetConnection } from '../features/connections/connectionSlice'
+
 
 
 export const Dashboard = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [editProfileModal, setEditProfileModal] = useState(false)
-    const [viewProfileModal, setViewProfileModal] = useState(false)
     const [connectionsModal, setConnectionsModal] = useState(false)
     const [addItineraryModal, setAddItineraryModal] = useState(false)
     const [editItineraryModal, setEditItineraryModal] = useState(false)
+    const [itineraryToUpdate, setItineraryToUpdate] = useState({
+        id: '',
+        country: '',
+        state: '',
+        city: '',
+        start_date: '',
+        end_date: '',
+        details: ''
+    })
 
 
 
-    const {profile, userProfile, isLoading, isSuccess, isError, message} = useSelector((state) => state.profile)
+    const {profile, isLoading, isSuccess, isError, message} = useSelector((state) => state.profile)
     const {user} = useSelector((state) => state.auth)
     const {itineraryLoading, itineraryError, itinerarySuccess, itineraryMessage} = useSelector((state) => state.itinerary)
+    const {connections, connectionError, connectionSuccess,
+        connectionLoading, connectionMessage} = useSelector((state) => state.connection)
 
     useEffect(() => {
         if (isError) {
@@ -38,18 +51,25 @@ export const Dashboard = () => {
         if (itineraryError) {
             toast.error(itineraryMessage)
         }
+        if (connectionError) {
+            toast.error(itineraryMessage)
+        }
 
         if (!user) {
             navigate('/login')
         } else {
             dispatch(getMe()) 
+            dispatch(getConnections())
         }
 
         return () => {
             dispatch(resetProfile())
             dispatch(resetItinerary())
+            dispatch(resetConnection())
           }
-    }, [navigate, user, isError, message, dispatch, itineraryError, itineraryMessage])
+    }, [navigate, user, isError, message,
+        dispatch, itineraryError, itineraryMessage, 
+        connectionError, connectionMessage])
     
     const openEditProfile = () => {
         setEditProfileModal(true)
@@ -75,25 +95,22 @@ export const Dashboard = () => {
         setAddItineraryModal(false)
     }
 
-    const openEditItinerary = () => {
+    const openEditItinerary = (id, country, state, city, start_date, end_date, details) => {
         setEditItineraryModal(true)
+        setItineraryToUpdate({
+            id: id,
+            country: country,
+            state: state,
+            city: city,
+            start_date: start_date,
+            end_date: end_date,
+            details: details
+        })
     }
 
     const closeEditItinerary = () => {
         setEditItineraryModal(false)
     }
-
-    const openViewProfile = () => {
-        setViewProfileModal(true)
-    }
-
-    const closeViewProfile = () => {
-        setViewProfileModal(false)
-    }
-
-    // const editItinerary = () => {
-    //     setOpenEditItinerary(true)
-    // }
 
     const EditProfileModal = ({open, handleClose}) => {
         const [formData, setFormData] = useState({
@@ -133,7 +150,7 @@ export const Dashboard = () => {
             
         }
         return (
-            <Modal open={open} handleClose={handleClose}>
+            <Modal open={open} handleClose={handleClose} className={'sm:w-6/12 lg:w-4/12'}>
                 <div>
                     <h3 className='text-lg font-bold mb-5'>Edit Profile</h3>
                     <form onSubmit={onSubmit}>
@@ -198,10 +215,54 @@ export const Dashboard = () => {
     }
 
     const ConnectionsModal = ({open, handleClose}) => {
+        const accept = (id) => {
+            dispatch(acceptConnection(id)).then(() => {
+                dispatch(getConnections())
+                // dispatch(getMe())
+            })
+        }
+
+        const deleteConnect = (id) => {
+            dispatch(deleteConnection(id)).then(() => {
+                dispatch(getConnections())
+                dispatch(getMe())
+            })
+        }
+
+        const viewProfile = (senderId, recipientId) => {
+            if (senderId === user._id) {
+                navigate(`/profile/${recipientId}`)
+            } else {
+                navigate(`/profile/${senderId}`)
+            }
+        }
         return (
-            <Modal open={open} handleClose={handleClose}>
-                <div>
-                    <h3>Connections Modal</h3>
+            <Modal open={open} handleClose={handleClose} className={'sm:w-8/12 md:w-7/12 xl:w-4/12'}>
+                <div className=''>
+                    <h3 className='font-bold'>Connections</h3>
+                    {connections?.length > 0 ? 
+                    (<div className='mt-5 overflow-scroll'>
+                        {connections?.map((connection) => (
+                            <div key={connection._id}>
+                                <div className='flex my-5 sm:justify-between items-center'>
+                                    <p className='mr-5'>{connection.sender._id === user._id ? 
+                                    connection.recipient.username : 
+                                    connection.sender.username}</p>
+                                    {connection.status === 'pending' && <>
+                                    {connection.sender._id === user._id ? <span className="mr-5">Pending</span> :
+                                        <button onClick={() => accept(connection._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-3 shrink-0'>Accept Request</button>
+                                    }
+                                    <button onClick={() => deleteConnect(connection._id)} className='border border-[#002455] px-3 py-2 rounded text-sm shrink-0'>Delete</button></>}
+                                    {connection.status === 'accepted' && <>
+                                    <button onClick={() => viewProfile(connection.sender._id, connection.recipient._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-5 shrink-0'>View Profile</button>
+                                    <button onClick={() => deleteConnect(connection._id)} className='border border-[#002455] px-3 py-2 rounded shrink-0'>Delete</button></>}
+                                    
+                                </div>
+                                <div className='border-t border-[#002455]'></div>
+                            </div>
+                        ))}
+                    </div>):
+                    (<p className='my-5'>No Connections yet</p>)}
                 </div>
             </Modal>
         )
@@ -230,21 +291,28 @@ export const Dashboard = () => {
         const onSubmit = (e) => {
             e.preventDefault()
 
+            if (start_date > end_date) {
+                toast.error('Invalid dates!')
+                return
+            }
+
             const itineraryData = {country: country.toLowerCase(), 
                                    state:  state.toLowerCase(),
                                    city: city.toLowerCase(),
-                                   start_date, end_date}
+                                   details, start_date, end_date}
 
             dispatch(addItinerary(itineraryData)).then(() => {
                 dispatch(getMe())
             })
             setAddItineraryModal(false)
         }
+
         const onCancel = (e) => {
             setAddItineraryModal(false)
         }
+
         return (
-            <Modal open={open} handleClose={handleClose}>
+            <Modal open={open} handleClose={handleClose} className={'sm:w-6/12 lg:w-4/12'}>
                 <div>
                     <h3 className='text-lg font-bold mb-5'>Add Itinerary</h3>
                     <form onSubmit={onSubmit}>
@@ -252,7 +320,7 @@ export const Dashboard = () => {
                         <label htmlFor='country' className='mr-2 block'>Country: </label>
                         <input maxLength={30} id="country" type="text" name="country" 
                         className='border rounded p-1.5 w-full xl:w-8/12
-                        focus:outline-none' onChange={onChange} value={country}/>
+                        focus:outline-none' onChange={onChange} value={country} required/>
                         </div>
 
                         <div className='my-4'>
@@ -280,14 +348,14 @@ export const Dashboard = () => {
                         <label htmlFor='start_date' className='mr-2 block'>Start Date: </label>
                         <input id="start_date" name="start_date" type="date" 
                         className='border rounded p-1.5 w-full xl:w-8/12
-                        focus:outline-none' onChange={onChange} value={start_date}/>
+                        focus:outline-none' onChange={onChange} value={start_date} required/>
                         </div>
 
                         <div className='my-4'>
                         <label htmlFor='end_date' className='mr-2 block'>End Date: </label>
                         <input id="end_date" name="end_date" type="date" 
                         className='border rounded p-1.5 w-full xl:w-8/12
-                        focus:outline-none' onChange={onChange} value={end_date}/>
+                        focus:outline-none' onChange={onChange} value={end_date} required/>
                         </div>
 
                         <div className='my-8 flex justify-between'>
@@ -302,22 +370,113 @@ export const Dashboard = () => {
     }
 
     const EditItineraryModal = ({open, handleClose}) => {
+        const [formData, setFormData] = useState({
+            country: capitalize(itineraryToUpdate.country),
+            state: capitalize(itineraryToUpdate.state),
+            city: capitalize(itineraryToUpdate.city),
+            start_date: moment(itineraryToUpdate.start_date).format('YYYY-MM-DD'),
+            end_date: moment(itineraryToUpdate.end_date).format('YYYY-MM-DD'),
+            details: itineraryToUpdate.details
+        })
+
+        const {country, state, city, start_date, end_date, details} = formData
+
+        const onChange = (e) => {
+            setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value
+                }))
+        }
+
+
+        const onSubmit = (e) => {
+            e.preventDefault()
+
+            if (start_date > end_date) {
+                toast.error('Invalid dates!')
+                return
+            }
+
+            const itineraryData = {country: country.toLowerCase(), 
+                state:  state.toLowerCase(),
+                city: city.toLowerCase(),
+                details, start_date, end_date}
+
+            const params = {
+                id: itineraryToUpdate.id,
+                data: itineraryData
+            }
+
+            dispatch(updateItinerary(params)).then(() => {
+                dispatch(getMe())
+            })
+            setEditItineraryModal(false)
+        }
+
+        const onCancel = () => {
+            setEditItineraryModal(false)
+        }
         return (
-            <Modal open={open} handleClose={handleClose}>
-                <h3>Edit itinerary Modal</h3>
+            <Modal open={open} handleClose={handleClose} className={'sm:w-6/12 lg:w-4/12'}>
+                <h3 className='text-lg font-bold mb-5'>Edit Itinerary</h3>
+                <form onSubmit={onSubmit}>
+                        <div className='mt-2 mb-4'>
+                        <label htmlFor='country' className='mr-2 block'>Country: </label>
+                        <input maxLength={30} id="country" type="text" name="country" 
+                        className='border rounded p-1.5 w-full xl:w-8/12
+                        focus:outline-none' onChange={onChange} value={country} required/>
+                        </div>
+
+                        <div className='my-4'>
+                        <label htmlFor='state' className='mr-2 block'>State: </label>
+                        <input maxLength={30} id="state" name="state" type="text" 
+                        className='border rounded p-1.5 w-full xl:w-8/12
+                        focus:outline-none' onChange={onChange} value={state}/>
+                        </div>
+
+                        <div className='my-4'>
+                        <label htmlFor='city' className='mr-2 block'>City: </label>
+                        <input maxLength={30} id="city" name="city" type="text" 
+                        className='border rounded p-1.5 w-full xl:w-8/12
+                        focus:outline-none' onChange={onChange} value={city}/>
+                        </div>
+
+                        <div className='my-4'>
+                        <label htmlFor='details' className='mr-2 block'>Details: </label>
+                        <textarea maxLength={100} id="details" name="details"
+                        className='border rounded p-1.5 w-full xl:w-8/12
+                        focus:outline-none' onChange={onChange} value={details}></textarea>
+                        </div>
+
+                        <div className='my-4'>
+                        <label htmlFor='start_date' className='mr-2 block'>Start Date: </label>
+                        <input id="start_date" name="start_date" type="date" 
+                        className='border rounded p-1.5 w-full xl:w-8/12
+                        focus:outline-none' onChange={onChange} value={start_date} required/>
+                        </div>
+
+                        <div className='my-4'>
+                        <label htmlFor='end_date' className='mr-2 block'>End Date: </label>
+                        <input id="end_date" name="end_date" type="date" 
+                        className='border rounded p-1.5 w-full xl:w-8/12
+                        focus:outline-none' onChange={onChange} value={end_date} required/>
+                        </div>
+
+                        <div className='my-8 flex justify-between'>
+                        <button type="submit" className='border w-4/12 rounded border-[#002455] px-3 py-2'>Save</button>
+                        <button type="reset" onClick={onCancel} className='border rounded w-4/12 border-[#002455] px-3 py-2'>Cancel</button>
+                        </div>
+
+                    </form>
             </Modal>
         )
     }
 
-    const ViewProfileModal = ({open, handleClose}) => {
-        return (
-            <Modal open={open} handleClose={handleClose}>
-                <h3>View Profile Modal</h3>
-            </Modal>
-        )
+    const onDeleteItinerary = (id) => {
+        dispatch(deleteItinerary(id))
     }
 
-    if (isLoading || itineraryLoading) {
+    if (isLoading || itineraryLoading || connectionLoading) {
         return (<Spinner/>)
       }
 
@@ -330,7 +489,7 @@ export const Dashboard = () => {
     <section className='text-[#002455] p-5 xl:px-28 sm:px-10 sm:py-10'>
         <div className="grid sm:grid-cols-2 gap-10 ">
 
-            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[30rem]'>
+            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem]'>
                 <h3 className='mt-2 mb-5 text-xl font-bold'>Hello, {profile ? profile.username : ''}!</h3>
                 <p className='mb-5'>Bio: {profile?.bio ? profile.bio : ''}</p>
                 <p className='mb-5'>Name: {profile?.first_name ? profile.first_name : ''} {profile?.last_name ? profile.last_name : ''}</p>
@@ -339,7 +498,12 @@ export const Dashboard = () => {
                 <p className='mb-5'>Gender: {profile?.gender ? profile.gender : ''}</p>
                 <p className='mb-5'>Nationality: {profile?.nationality ? profile.nationality : ''}</p>
                 <p className='mb-5'>Interests: {profile?.interests ? profile.interests : ''}</p>
-                <p className='mb-5'>{profile ? profile.connections.length : ''} connections</p>
+                <p className='mb-5'>{profile ? profile?.connections?.length : ''} {profile?.connections?.length === 1 ? 'connection' : 'connections'}</p>
+
+                <button className='border mt-2 text-md sm:px-3 px-2 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>
+                    <Link to="/search">Search for a travel partner</Link>
+                    </button>
+
             </div>
 
             <div className='flex my-3 text-[0.8rem] sm:text-base sm:hidden'>
@@ -347,18 +511,22 @@ export const Dashboard = () => {
             <button onClick={openConnections} className='border sm:px-3 px-2 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>View Connections</button>
             </div>
 
-            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[30rem] overflow-scroll'>
+            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem] overflow-scroll'>
                 <h3 className='text-2xl'>Itineraries</h3>
                 <button onClick={openAddItinerary} className='border text-sm my-3 px-3 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Add Itinerary</button>
                 {profile?.itineraries?.length > 0 ? (
                     <div>
-                        {profile.itineraries.map((itinerary) => (
+                        {profile?.itineraries.map((itinerary) => (
                            <div className='my-5' key={itinerary._id}>
                            <p className='font-bold'>{capitalize(itinerary.country)}{itinerary.state ? ', ' + capitalize(itinerary.state) : ''} {itinerary.city? ', ' + capitalize(itinerary.city) : ''}</p>
                            <p><Moment format="MMM DD, YYYY">{itinerary.start_date}</Moment>
                            <span> to </span>  
                            <Moment format="MMM DD, YYYY">{itinerary.end_date}</Moment></p>
-                           <button onClick={openEditItinerary} className='border text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Edit</button>
+                           <p className='my-1'>Details: {itinerary.details ? itinerary.details : ''}</p>
+                           <button onClick={() => openEditItinerary(itinerary._id, itinerary.country, itinerary.state, itinerary.city, itinerary.start_date, itinerary.end_date, itinerary.details)} 
+                           className='border mr-5 text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Edit</button>
+                           <button onClick={() => onDeleteItinerary(itinerary._id)} 
+                           className='border text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Delete</button>
                        </div> 
                         ))}
                     </div>
@@ -372,10 +540,9 @@ export const Dashboard = () => {
         </div>
     </section>
     <EditProfileModal open={editProfileModal} handleClose={closeEditProfile}/>
-    <AddItineraryModal open={addItineraryModal} handleClose={closeAddItinerary}/>
-    <EditItineraryModal open={editItineraryModal} handleClose={closeEditItinerary}/>
-    <ConnectionsModal open={connectionsModal} handleClose={closeConnections}/>
-    <ViewProfileModal open={viewProfileModal} handleClose={closeViewProfile}/>
+    <AddItineraryModal open={addItineraryModal} handleClose={closeAddItinerary} />
+    <EditItineraryModal open={editItineraryModal} handleClose={closeEditItinerary} />
+    <ConnectionsModal open={connectionsModal} handleClose={closeConnections} />
     </>
   )
 }

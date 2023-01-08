@@ -56,13 +56,13 @@ export const Header = () => {
         }}
       >
         <div className={`${currentPath === '/' ? 'hidden' : ''}`}><MenuItem onClick={handleClose}><Link to="/">Home</Link></MenuItem></div>
-        <MenuItem onClick={handleClose}>About us</MenuItem>
+        <MenuItem onClick={handleClose}><Link to="/about">About us</Link></MenuItem>
         {user ? (<div><div className={`${currentPath === '/dashboard' ? 'hidden' : ''}`}><MenuItem onClick={handleClose}><Link to="/dashboard">Dashboard</Link></MenuItem></div>
         <MenuItem onClick={handleClose}><button onClick={onLogout}>Logout</button></MenuItem></div>):
         (<div><MenuItem onClick={handleClose}><Link to="/login">Login</Link></MenuItem>
         <MenuItem onClick={handleClose}><Link to="/signup">Signup</Link></MenuItem></div>)}
         
-        <MenuItem onClick={handleClose}>Contact us</MenuItem>
+        <MenuItem onClick={handleClose}><Link to="/contact">Contact us</Link></MenuItem>
 
 
 
@@ -82,7 +82,7 @@ export const Header = () => {
 
       <div className='flex mr-3 mt-2 md:mt-0'>
         <FaBookOpen className='mr-2 mt-1'/>
-        <p>About us</p>
+        <Link to="/about">About us</Link>
       </div>
       
       {user ? (<>
@@ -104,13 +104,10 @@ export const Header = () => {
         <Link to="/signup">Signup</Link>
       </div>
       </>)}
-      
-
-      
 
       <div className='flex mr-3 mt-2 md:mt-0'>
         <FaPhoneSquareAlt className='mr-2 mt-1'/>
-        <p>Contact us</p>
+        <Link to="/contact">Contact us</Link>
       </div>
 
 

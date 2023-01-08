@@ -5,6 +5,9 @@ import { Spinner} from '../components/Spinner'
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { register, reset } from "../features/auth/authSlice"
+import { resetProfile } from '../features/profile/profileSlice'
+import { resetConnection } from "../features/connections/connectionSlice"
+import { resetItinerary } from "../features/itineraries/itinerarySlice"
 
 
 export const Signup = () => {
@@ -31,6 +34,9 @@ export const Signup = () => {
     }
 
     dispatch(reset())
+    dispatch(resetProfile())
+    dispatch(resetConnection())
+    dispatch(resetItinerary())
 
   },[user, isError, isSuccess, message, navigate, dispatch])
 
@@ -45,6 +51,7 @@ export const Signup = () => {
     if (username === '' || email === '' || password === ''
         || confirmPassword === '' || phone === '') {
           toast.error('Please fill in all details')
+          return
         }
     if (password !== confirmPassword) {
       toast.error('Passwords do not match!')
@@ -68,26 +75,26 @@ export const Signup = () => {
             <form className="sm:w-5/12 w-11/12 text-xs sm:text-base" onSubmit={onSubmit}>
                 <div className="border border-[#999999] mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="username" id="username" name="username"
-                placeholder='Enter your username' value={username} onChange={onChange}/>
+                placeholder='Enter your username' value={username} onChange={onChange} required/>
                 </div>
                 <div className="border border-[#999999] mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="email" id="email" name="email"
-                placeholder='Enter your email' value={email} onChange={onChange}/>
+                placeholder='Enter your email' value={email} onChange={onChange} required/>
                 </div>
 
                 <div className="border border-[#999999] mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="password" id="password" name="password"
-                placeholder='Enter your password' value={password} onChange={onChange}/>
+                placeholder='Enter your password' value={password} onChange={onChange} required/>
                 </div>
 
                 <div className={`${password && password !== confirmPassword ? 'border-[red]' : 'border-[#999999]'} border mt-8 w-full rounded`}>
                 <input className="outline-none rounded p-3 w-full" type="password" id="confirmPassword" name="confirmPassword"
-                placeholder='Confirm password' value={confirmPassword} onChange={onChange}/>
+                placeholder='Confirm password' value={confirmPassword} onChange={onChange} required/>
                 </div>
 
                 <div className="border-[#999999] border  mt-8 w-full rounded">
                 <input className="outline-none rounded p-3 w-full" type="tel" id="phone" name="phone"
-                placeholder='Enter phone number' value={phone} onChange={onChange}/>
+                placeholder='Enter phone number' value={phone} onChange={onChange} required/>
                 </div>
 
                 <div className="mt-5">

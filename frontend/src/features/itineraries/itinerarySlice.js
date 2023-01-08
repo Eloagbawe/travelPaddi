@@ -1,6 +1,9 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import itineraryService from './itineraryService'
 
+//Get user from localStorage
+const user = JSON.parse(localStorage.getItem('user'))
+
 const initialState = {
     itineraries: [],
     itineraryError: false,
@@ -41,6 +44,19 @@ export const searchItinerary = createAsyncThunk('itinerary/search', async (data,
     try {
         const token = thunkAPI.getState().auth.user.token
         return await itineraryService.search_itinerary(data, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && 
+            error.response.data.message) || error.message || error.toString()
+
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Delete itinerary
+export const deleteItinerary = createAsyncThunk('itinerary/delete', async (id,thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await itineraryService.delete_itinerary(id, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -96,6 +112,18 @@ export const itinerarySlice = createSlice({
             state.itineraryError = true
             state.itineraryMessage = action.payload
             state.itineraries = []
+        })
+        .addCase(deleteItinerary.pending, (state) => {
+            state.itineraryLoading = true
+        })
+        .addCase(deleteItinerary.fulfilled, (state, action) => {
+            state.itineraryLoading = false
+            state.itinerarySuccess = true
+        })
+        .addCase(deleteItinerary.rejected, (state, action) => {
+            state.itineraryLoading = false
+            state.itineraryError = true
+            state.itineraryMessage = action.payload
         })
     }
 
