@@ -13,7 +13,7 @@ const createUser = asyncHandler(async (req, res) => {
         throw new Error('Please add all fields!')
     }
 
-    //Check if usename exists
+    //Check if username exists
     const usernameExists = await User.findOne({username})
     
     if (usernameExists) {
