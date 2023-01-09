@@ -66,7 +66,7 @@ export const Profile = () => {
                 <p className='mb-5'>Gender: {userProfile?.gender ? userProfile.gender : ''}</p>
                 <p className='mb-5'>Nationality: {userProfile?.nationality ? userProfile.nationality : ''}</p>
                 <p className='mb-5'>Interests: {userProfile?.interests ? userProfile.interests : ''}</p>
-                <p className='mb-5'>{userProfile ? userProfile?.connections?.length : ''} connections</p>
+                <p className='mb-5'>{userProfile ? userProfile?.connections?.length : ''} {userProfile?.connections?.length === 1 ? 'connection' : 'connections'}</p>
 
             </div>
 
