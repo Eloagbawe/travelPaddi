@@ -471,6 +471,7 @@ export const Dashboard = () => {
 
     const onDeleteItinerary = (id) => {
         dispatch(deleteItinerary(id))
+        dispatch(getMe())
     }
 
     if (isLoading || itineraryLoading || connectionLoading) {
