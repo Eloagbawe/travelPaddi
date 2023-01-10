@@ -18,8 +18,17 @@ export const Dashboard = () => {
     const navigate = useNavigate()
     const [editProfileModal, setEditProfileModal] = useState(false)
     const [connectionsModal, setConnectionsModal] = useState(false)
+    const [deleteConnectionModal, setDeleteConnectionModal] = useState(false)
+    const [connectionToDelete, setConnectionToDelete] = useState({
+        id: '',
+        type: ''
+    })
     const [addItineraryModal, setAddItineraryModal] = useState(false)
     const [editItineraryModal, setEditItineraryModal] = useState(false)
+    const [deleteItineraryModal, setDeleteItineraryModal] = useState(false)
+    const [itineraryToDelete, setItineraryToDelete] = useState('')
+
+
     const [itineraryToUpdate, setItineraryToUpdate] = useState({
         id: '',
         country: '',
@@ -87,12 +96,32 @@ export const Dashboard = () => {
         setConnectionsModal(false)
     }
 
+    const openDeleteConnection = (id, type) => {
+        setDeleteConnectionModal(true)
+        setConnectionToDelete({
+            id: id,
+            type: type
+        })
+    }
+
+    const closeDeleteConnection = () => {
+        setDeleteConnectionModal(false)
+    }
+
     const openAddItinerary = () => {
         setAddItineraryModal(true)
     }
 
     const closeAddItinerary = () => {
         setAddItineraryModal(false)
+    }
+    const openDeleteItinerary = (id) => {
+        setDeleteItineraryModal(true)
+        setItineraryToDelete(id)
+    }
+
+    const closeDeleteItinerary = () => {
+        setDeleteItineraryModal(false)
     }
 
     const openEditItinerary = (id, country, state, city, start_date, end_date, details) => {
@@ -219,12 +248,6 @@ export const Dashboard = () => {
             })
         }
 
-        const deleteConnect = (id) => {
-            dispatch(deleteConnection(id)).then(() => {
-                dispatch(getConnections())
-                dispatch(getMe())
-            })
-        }
 
         const viewProfile = (senderId, recipientId) => {
             if (senderId === user._id) {
@@ -249,10 +272,10 @@ export const Dashboard = () => {
                                     {connection?.sender?._id === user?._id ? <span className="mr-5">Pending</span> :
                                         <button onClick={() => accept(connection?._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-3 shrink-0'>Accept Request</button>
                                     }
-                                    <button onClick={() => deleteConnect(connection?._id)} className='border border-[#002455] px-3 py-2 rounded text-sm shrink-0'>Delete</button></>}
+                                    <button onClick={() => openDeleteConnection(connection?._id, 'request')} className='border border-[#002455] px-3 py-2 rounded text-sm shrink-0'>Delete</button></>}
                                     {connection?.status === 'accepted' && <>
                                     <button onClick={() => viewProfile(connection?.sender._id, connection?.recipient._id)} className='border border-[#002455] px-3 py-2 rounded text-sm mr-5 shrink-0'>View Profile</button>
-                                    <button onClick={() => deleteConnect(connection?._id)} className='border border-[#002455] px-3 py-2 rounded shrink-0'>Delete</button></>}
+                                    <button onClick={() => openDeleteConnection(connection?._id, 'connection')} className='border border-[#002455] px-3 py-2 rounded shrink-0'>Delete</button></>}
                                     
                                 </div>
                                 <div className='border-t border-[#002455]'></div>
@@ -263,6 +286,34 @@ export const Dashboard = () => {
                 </div>
             </Modal>
         )
+    }
+
+    const DeleteConnectionModal = ({open, handleClose}) => {
+    
+        const {id, type} = connectionToDelete
+
+        const deleteConnect = (id) => {
+            dispatch(deleteConnection(id)).then(() => {
+                dispatch(getConnections())
+                dispatch(getMe())
+            })
+            setDeleteConnectionModal(false)
+        }
+
+        const onCancel = () => {
+            setDeleteConnectionModal(false)
+            setConnectionToDelete('')
+        }
+        return(
+        <Modal open={open} handleClose={handleClose} className={'sm:w-6/12 lg:w-4/12'}>
+
+            <p className=''>Sure to delete {type}?</p>
+            <div className='my-8 flex sm:justify-between'>
+            <button type="submit" onClick={() => deleteConnect(id)} className='border mr-4 sm:w-4/12 rounded border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Delete</button>
+            <button type="reset" onClick={onCancel} className='border rounded sm:w-4/12 border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Cancel</button>
+            </div>
+
+        </Modal>)
     }
 
     const AddItineraryModal = ({open, handleClose}) => {
@@ -469,11 +520,32 @@ export const Dashboard = () => {
         )
     }
 
-    const onDeleteItinerary = (id) => {
-        dispatch(deleteItinerary(id)).then(() => {
-            dispatch(getMe())
-        })
+    const DeleteItineraryModal = ({open, handleClose}) => {
+    
+        const onDeleteItinerary = (id) => {
+            dispatch(deleteItinerary(id)).then(() => {
+                dispatch(getMe())
+            })
+            setDeleteItineraryModal(false)
+        }
+
+        const onCancel = () => {
+            setDeleteItineraryModal(false)
+            setItineraryToDelete('')
+        }
+        return(
+        <Modal open={open} handleClose={handleClose} className={'sm:w-6/12 lg:w-4/12'}>
+
+            <p className=''>Sure to delete itinerary?</p>
+            <div className='my-8 flex sm:justify-between'>
+            <button type="submit" onClick={() => onDeleteItinerary(itineraryToDelete)} className='border mr-4 sm:w-4/12 rounded border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Delete</button>
+            <button type="reset" onClick={onCancel} className='border rounded sm:w-4/12 border-[#002455] px-2 py-1 sm:px-3 sm:py-2'>Cancel</button>
+            </div>
+
+        </Modal>)
     }
+
+    
 
     if (isLoading || itineraryLoading || connectionLoading) {
         return (<Spinner/>)
@@ -499,7 +571,7 @@ export const Dashboard = () => {
                 <p className='mb-5'>Interests: {profile?.interests ? profile?.interests : ''}</p>
                 <p className='mb-5'>{profile ? profile?.connections?.length : ''} {profile?.connections?.length === 1 ? 'connection' : 'connections'}</p>
 
-                <button className='border mt-2 text-md sm:px-3 px-2 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>
+                <button className='border mt-2 text-sm sm:text-md sm:px-3 px-2 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>
                     <Link to="/search">Search for a travel partner</Link>
                     </button>
 
@@ -524,7 +596,7 @@ export const Dashboard = () => {
                            <p className='my-1'>Details: {itinerary?.details ? itinerary?.details : ''}</p>
                            <button onClick={() => openEditItinerary(itinerary?._id, itinerary?.country, itinerary?.state, itinerary?.city, itinerary?.start_date, itinerary?.end_date, itinerary?.details)} 
                            className='border mr-5 text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Edit</button>
-                           <button onClick={() => onDeleteItinerary(itinerary?._id)} 
+                           <button onClick={() => openDeleteItinerary(itinerary?._id)} 
                            className='border text-xs my-3 px-3 py-1 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Delete</button>
                        </div> 
                         ))}
@@ -542,6 +614,8 @@ export const Dashboard = () => {
     <AddItineraryModal open={addItineraryModal} handleClose={closeAddItinerary} />
     <EditItineraryModal open={editItineraryModal} handleClose={closeEditItinerary} />
     <ConnectionsModal open={connectionsModal} handleClose={closeConnections} />
+    <DeleteConnectionModal open={deleteConnectionModal} handleClose={closeDeleteConnection}/>
+    <DeleteItineraryModal open={deleteItineraryModal} handleClose={closeDeleteItinerary}/>
     </>
   )
 }
