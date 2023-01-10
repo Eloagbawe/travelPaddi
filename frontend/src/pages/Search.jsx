@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 import Moment from 'react-moment';
 import { useNavigate, Link } from 'react-router-dom'
 import { resetProfile } from '../features/profile/profileSlice'
-import { logout } from '../features/auth/authSlice'
+import { logout, reset } from '../features/auth/authSlice'
 import { requestConnection, getConnections, resetConnection } from '../features/connections/connectionSlice'
 
 
@@ -67,6 +67,7 @@ export const Search = () => {
     }
 
     return () => {
+      dispatch(reset())
       dispatch(resetItinerary())
       dispatch(resetProfile())
       dispatch(resetConnection())
@@ -97,11 +98,11 @@ export const Search = () => {
     
     dispatch(searchItinerary(itineraryData))
     setSearchMode(true)
-    let offsetTop  = document.getElementById("search_results").offsetTop;
-      window.scrollTo({
-          top: offsetTop-100, 
-          behavior: "smooth"
-      });
+    // let offsetTop  = document.getElementById("search_results").offsetTop;
+    //   window.scrollTo({
+    //       top: offsetTop-100, 
+    //       behavior: "smooth"
+    //   });
   }
 
   if (itineraryLoading || connectionLoading) {
@@ -138,9 +139,10 @@ export const Search = () => {
         <h3 className="text-2xl sm:text-4xl text-center">Search for a travel partner</h3>
         </div>
 
-        <div className="flex justify-center">
+        <div className={`flex justify-center ${searchMode ? 'hidden' : ''}`}>
             <form className="sm:w-5/12 w-11/12" onSubmit={(e) => submitSearch(e)}>
-                <div className="border border-[#999999] mt-8 w-full rounded">
+                <div className="border border-[#999999] mt-8 w-full rounded relative">
+                <span className='text-red-300 bg-white absolute top-3.5 right-2 sm:right-3 text-xl'>*</span>
                 <input className="outline-none p-3 w-full rounded" type="text" id="country" name="country"
                 placeholder='Enter destination country' onChange={onChange} value={country} required/>
                 </div>
@@ -155,13 +157,13 @@ export const Search = () => {
                 placeholder='Enter destination city' onChange={onChange} value={city}/>
                 </div>
 
-                <div className='mt-6'><label htmlFor="start_date"> Enter travel start date</label></div>
+                <div className='mt-6'><label htmlFor="start_date"> Enter travel start date <span className='text-red-400'>*</span></label></div>
                 <div className="border border-[#999999] mt-2 w-full rounded">
                 <input className="outline-none p-3 w-full rounded" type="date" id="start_date" name="start_date"
                 placeholder='Enter travel start date' onChange={onChange} value={start_date} required/>
                 </div>
 
-                <div className='mt-6'><label htmlFor="end_date"> Enter travel end date</label></div>
+                <div className='mt-6'><label htmlFor="end_date"> Enter travel end date <span className='text-red-400'>*</span></label></div>
                 <div className="border border-[#999999] mt-2 w-full rounded">
                 <input className="outline-none p-3 w-full rounded" type="date" id="end_date" name="end_date"
                 placeholder='Enter travel end date' onChange={onChange} value={end_date} required/>
@@ -180,6 +182,7 @@ export const Search = () => {
           <h3 className='text-lg'>Results:</h3>
 
           <div className='border border-[#002455] p-5 rounded mt-5 mb-10 h-96 overflow-scroll'>
+          <button className='border border-[#002455] p-2 rounded w-40 mb-5' onClick={() => setSearchMode(false)}>Search Again</button>
           {itineraries?.length > 0 ? (<div>
             {itineraries?.map((itinerary) => (
               <div key={itinerary?._id} >
