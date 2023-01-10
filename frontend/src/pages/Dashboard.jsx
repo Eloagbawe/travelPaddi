@@ -510,11 +510,11 @@ export const Dashboard = () => {
             <button onClick={openConnections} className='border sm:px-3 px-2 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>View Connections</button>
             </div>
 
-            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem] overflow-scroll'>
+            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem]'>
                 <h3 className='text-2xl'>Itineraries</h3>
                 <button onClick={openAddItinerary} className='border text-sm my-3 px-3 py-2 rounded border-[#002455] hover:bg-[#002455] hover:text-[#ffffff]'>Add Itinerary</button>
                 {profile?.itineraries?.length > 0 ? (
-                    <div>
+                    <div className='overflow-scroll h-[70%]'>
                         {profile?.itineraries.map((itinerary) => (
                            <div className='my-5' key={itinerary?._id}>
                            <p className='font-bold'>{capitalize(itinerary?.country)}{itinerary?.state ? ', ' + capitalize(itinerary?.state) : ''} {itinerary?.city? ', ' + capitalize(itinerary?.city) : ''}</p>
