@@ -70,11 +70,11 @@ export const Profile = () => {
 
             </div>
 
-            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem] overflow-scroll'>
+            <div className='border rounded border-[#002455] p-3 sm:p-5 h-[32rem]'>
                 <h3 className='text-2xl'>Itineraries</h3>
 
                 {userProfile?.itineraries?.length > 0 ? (
-                    <div>
+                    <div className='overflow-scroll h-[90%] mt-2'>
                         {userProfile?.itineraries?.map((itinerary) => (
                            <div className='my-5' key={itinerary._id}>
                            <p className='font-bold'>{capitalize(itinerary.country)}{itinerary.state ? ', ' + capitalize(itinerary.state) : ''} {itinerary.city? ', ' + capitalize(itinerary.city) : ''}</p>
