@@ -10,7 +10,7 @@ const createConnection = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error('Requested user not found')
     }
-    if (req.user.id == req.params.id){
+    if (req.user.id === req.params.id){
         res.status(400)
         throw new Error('Cannot connect to self')
     }
@@ -62,7 +62,6 @@ const acceptConnection = asyncHandler(async (req, res) => {
 
     const updatedConnection = await Connection.findByIdAndUpdate(req.params.id, {status: 'accepted'}, {new: true})
     res.status(200).json(updatedConnection)
-    // res.status(200).json({message: 'get connections'})
 })
 
 const deleteConnection = asyncHandler(async (req, res) => {
