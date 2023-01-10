@@ -73,26 +73,31 @@ export const Signup = () => {
 
         <div className="flex justify-center">
             <form className="sm:w-5/12 w-11/12 text-xs sm:text-base" onSubmit={onSubmit}>
-                <div className="border border-[#999999] mt-8 w-full rounded">
+                <div className="border border-[#999999] mt-8 w-full rounded relative">
+                <span className='text-red-300 bg-white absolute top-2 sm:top-3.5 right-2 sm:right-3 text-xl'>*</span>
                 <input className="outline-none rounded p-3 w-full" type="username" id="username" name="username"
                 placeholder='Enter your username' value={username} onChange={onChange} required/>
                 </div>
-                <div className="border border-[#999999] mt-8 w-full rounded">
+                <div className="border border-[#999999] mt-8 w-full rounded relative">
+                <span className='text-red-300 bg-white absolute top-2 sm:top-3.5  right-2 sm:right-3 text-xl'>*</span>
                 <input className="outline-none rounded p-3 w-full" type="email" id="email" name="email"
                 placeholder='Enter your email' value={email} onChange={onChange} required/>
                 </div>
 
-                <div className="border border-[#999999] mt-8 w-full rounded">
+                <div className="border border-[#999999] mt-8 w-full rounded relative">
+                <span className='text-red-300 bg-white absolute top-2 sm:top-3.5  right-2 sm:right-3 text-xl'>*</span>
                 <input className="outline-none rounded p-3 w-full" type="password" id="password" name="password"
                 placeholder='Enter your password' value={password} onChange={onChange} required/>
                 </div>
 
-                <div className={`${password && password !== confirmPassword ? 'border-[red]' : 'border-[#999999]'} border mt-8 w-full rounded`}>
+                <div className={`${password && password !== confirmPassword ? 'border-[red]' : 'border-[#999999]'} border mt-8 w-full rounded relative`}>
+                <span className='text-red-300 bg-white absolute top-2 sm:top-3.5  right-2 sm:right-3 text-xl'>*</span>
                 <input className="outline-none rounded p-3 w-full" type="password" id="confirmPassword" name="confirmPassword"
                 placeholder='Confirm password' value={confirmPassword} onChange={onChange} required/>
                 </div>
 
-                <div className="border-[#999999] border  mt-8 w-full rounded">
+                <div className="border-[#999999] border  mt-8 w-full rounded relative">
+                <span className='text-red-300 bg-white absolute top-2 sm:top-3.5  right-2 sm:right-3 text-xl'>*</span>
                 <input className="outline-none rounded p-3 w-full" type="tel" id="phone" name="phone"
                 placeholder='Enter phone number' value={phone} onChange={onChange} required/>
                 </div>

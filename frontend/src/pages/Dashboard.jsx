@@ -8,7 +8,7 @@ import { Modal } from '../components/Modal'
 import { Spinner} from '../components/Spinner'
 import { getMe, updateProfile, resetProfile } from '../features/profile/profileSlice'
 import { addItinerary, updateItinerary, resetItinerary, deleteItinerary } from '../features/itineraries/itinerarySlice'
-import { logout } from '../features/auth/authSlice'
+import { logout, reset } from '../features/auth/authSlice'
 import { acceptConnection, deleteConnection, getConnections, resetConnection } from '../features/connections/connectionSlice'
 
 
@@ -72,6 +72,7 @@ export const Dashboard = () => {
         }
 
         return () => {
+            dispatch(reset())
             dispatch(resetProfile())
             dispatch(resetItinerary())
             dispatch(resetConnection())
@@ -365,7 +366,7 @@ export const Dashboard = () => {
                     <h3 className='text-lg font-bold mb-5'>Add Itinerary</h3>
                     <form onSubmit={onSubmit}>
                         <div className='mt-2 mb-4'>
-                        <label htmlFor='country' className='mr-2 block'>Country: </label>
+                        <label htmlFor='country' className='mr-2 block'>Country: <span className='text-red-400'>*</span></label>
                         <input maxLength={30} id="country" type="text" name="country" 
                         className='border rounded p-1.5 w-full xl:w-8/12
                         focus:outline-none' onChange={onChange} value={country} required/>
@@ -393,14 +394,14 @@ export const Dashboard = () => {
                         </div>
 
                         <div className='my-4'>
-                        <label htmlFor='start_date' className='mr-2 block'>Start Date: </label>
+                        <label htmlFor='start_date' className='mr-2 block'>Start Date: <span className='text-red-400'>*</span></label>
                         <input id="start_date" name="start_date" type="date" 
                         className='border rounded p-1.5 w-full xl:w-8/12
                         focus:outline-none' onChange={onChange} value={start_date} required/>
                         </div>
 
                         <div className='my-4'>
-                        <label htmlFor='end_date' className='mr-2 block'>End Date: </label>
+                        <label htmlFor='end_date' className='mr-2 block'>End Date: <span className='text-red-400'>*</span></label>
                         <input id="end_date" name="end_date" type="date" 
                         className='border rounded p-1.5 w-full xl:w-8/12
                         focus:outline-none' onChange={onChange} value={end_date} required/>
@@ -469,7 +470,7 @@ export const Dashboard = () => {
                 <h3 className='text-lg font-bold mb-5'>Edit Itinerary</h3>
                 <form onSubmit={onSubmit}>
                         <div className='mt-2 mb-4'>
-                        <label htmlFor='country' className='mr-2 block'>Country: </label>
+                        <label htmlFor='country' className='mr-2 block'>Country: <span className='text-red-400'>*</span></label>
                         <input maxLength={30} id="country" type="text" name="country" 
                         className='border rounded p-1.5 w-full xl:w-8/12
                         focus:outline-none' onChange={onChange} value={country} required/>
@@ -497,14 +498,14 @@ export const Dashboard = () => {
                         </div>
 
                         <div className='my-4'>
-                        <label htmlFor='start_date' className='mr-2 block'>Start Date: </label>
+                        <label htmlFor='start_date' className='mr-2 block'>Start Date: <span className='text-red-400'>*</span></label>
                         <input id="start_date" name="start_date" type="date" 
                         className='border rounded p-1.5 w-full xl:w-8/12
                         focus:outline-none' onChange={onChange} value={start_date} required/>
                         </div>
 
                         <div className='my-4'>
-                        <label htmlFor='end_date' className='mr-2 block'>End Date: </label>
+                        <label htmlFor='end_date' className='mr-2 block'>End Date: <span className='text-red-400'>*</span></label>
                         <input id="end_date" name="end_date" type="date" 
                         className='border rounded p-1.5 w-full xl:w-8/12
                         focus:outline-none' onChange={onChange} value={end_date} required/>
