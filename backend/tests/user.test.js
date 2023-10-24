@@ -41,6 +41,32 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContainEqual(newUser.username)
   })
+
+  test('creation fails with an existing username', async () => {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash('sekret', salt)
+    const newUser = {username: 'root', email: 'root@gmail.com',
+    password: hashedPassword, phone: 81234, status: 'active'}
+
+    await api
+    .post('/api/v1/users/create_account')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+  })
+
+  test('creation fails with incomplete data', async () => {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash('sekret', salt)
+    const newUser = {username: 'guest', password: hashedPassword,
+    phone: 81234, status: 'active'}
+
+    await api
+    .post('/api/v1/users/create_account')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+  })
 })
 
 afterAll(() => {
