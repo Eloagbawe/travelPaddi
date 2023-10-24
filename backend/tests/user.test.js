@@ -53,6 +53,13 @@ describe('when there is initially one user in db', () => {
     .send(newUser)
     .expect(400)
     .expect('Content-Type', /application\/json/)
+
+    expect(async () =>{
+      await api
+      .post('/api/v1/users/create_account')
+      .send(newUser)
+      .toThrow(`Username already exists!`)
+    })
   })
 
   test('creation fails with incomplete data', async () => {
@@ -66,6 +73,15 @@ describe('when there is initially one user in db', () => {
     .send(newUser)
     .expect(400)
     .expect('Content-Type', /application\/json/)
+
+    expect(async () =>{
+      await api
+      .post('/api/v1/users/create_account')
+      .send(newUser)
+      .toThrow(`Please add all fields!`)
+    })
+
+
   })
 })
 
